@@ -164,6 +164,23 @@
         .superhero {
             font-size: 28px;
             color: #2196f3;
+            cursor: pointer;
+            margin: 10px;
+            padding: 15px;
+            background-color: #ffeb3b;
+            border-radius: 10px;
+        }
+
+        .superhero:hover {
+            background-color: #ffcc00;
+            transform: scale(1.1);
+        }
+
+        .quote {
+            display: none;
+            color: #ff5722;
+            font-style: italic;
+            margin-top: 10px;
         }
 
     </style>
@@ -192,6 +209,7 @@
             <input type="password" id="password" name="password" required>
             <button type="submit">Sign In</button>
         </form>
+        <p id="randomCode"></p>
     </section>
 
     <section id="math" class="question-section">
@@ -220,12 +238,9 @@
 
     <div id="superheroSection" class="question-section">
         <h2 class="superhero-header">Superheroes!</h2>
-        <p class="superhero">Choose your superhero:</p>
-        <div id="superheroes">
-            <button onclick="chooseSuperhero('Iron Man')">Iron Man</button>
-            <button onclick="chooseSuperhero('Spider-Man')">Spider-Man</button>
-            <button onclick="chooseSuperhero('Captain America')">Captain America</button>
-        </div>
+        <p class="superhero" onclick="chooseSuperhero('Iron Man')">Iron Man</p>
+        <p class="superhero" onclick="chooseSuperhero('Spider-Man')">Spider-Man</p>
+        <p class="superhero" onclick="chooseSuperhero('Captain America')">Captain America</p>
     </div>
 
     <div id="multiplayerSection" class="question-section">
@@ -247,12 +262,19 @@
     let playerAnswer = '';
     let raceInProgress = false;
 
+    // Generate random sign-in code
+    function generateRandomCode() {
+        const randomCode = Math.floor(Math.random() * 1000000);
+        document.getElementById('randomCode').textContent = `Your sign-in code: ${randomCode}`;
+    }
+
     // Handle sign-in
     function signIn(event) {
         event.preventDefault();
         playerName = document.getElementById('username').value;
         document.getElementById('signIn').style.display = 'none'; // Hide sign-in after success
         showSection('math'); // Show math section after successful sign-in
+        generateRandomCode(); // Generate random code on sign-in
     }
 
     // Handle section display
@@ -328,7 +350,12 @@
         updateRank();
 
         document.getElementById('score').textContent = `Score: ${score}`;
-        showBanner();
+
+        if (correctAnswers === questions.length) {
+            showBanner();
+        } else {
+            alert('No, try again!');
+        }
     }
 
     // Update player rank based on score
@@ -350,6 +377,24 @@
         setTimeout(() => {
             banner.classList.remove('active');
         }, 3000);
+    }
+
+    // Superhero choice logic
+    function chooseSuperhero(superhero) {
+        let quote = '';
+        switch(superhero) {
+            case 'Iron Man':
+                quote = 'I am Iron Man!';
+                break;
+            case 'Spider-Man':
+                quote = 'With great power comes great responsibility!';
+                break;
+            case 'Captain America':
+                quote = 'I can do this all day!';
+                break;
+        }
+
+        alert(`${superhero}: ${quote}`);
     }
 
     // Multiplayer race function
@@ -374,11 +419,6 @@
                 alert("AI wins this time! Better luck next time.");
             }
         }
-    }
-
-    // Superhero choice logic
-    function chooseSuperhero(superhero) {
-        alert(`You have chosen ${superhero}!`);
     }
 
 </script>
