@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Adventure - CodeLearning</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 10px;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #signInForm {
+            max-width: 300px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .question-section {
+            display: none;
+        }
+
+        .active-section {
+            display: block;
+        }
+
+        .question {
+            margin-bottom: 15px;
+            background-color: #ffeb3b;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .question button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        #score, #rank {
+            margin-top: 20px;
+        }
+
+        .difficulty {
+            color: #ff5722;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #multiplayer {
+            margin-top: 20px;
+            background-color: #ff5722;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #multiplayer:hover {
+            background-color: #e64a19;
+        }
+
+        .banner {
+            display: none;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            margin-top: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .banner.active {
+            display: block;
+        }
+
+        .ai-player {
+            background-color: #2196f3;
+            color: white;
+            padding: 10px;
+            margin-top: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .player {
+            background-color: #ff5722;
+            color: white;
+            padding: 10px;
+            margin-top: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .superhero-header {
+            color: #ff4081;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .superhero {
+            font-size: 28px;
+            color: #2196f3;
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Learning Adventure - CodeLearning</h1>
+    <nav>
+        <ul>
+            <li><a href="#math" onclick="showSection('math')">Math</a></li>
+            <li><a href="#geography" onclick="showSection('geography')">Geography</a></li>
+            <li><a href="#science" onclick="showSection('science')">Science</a></li>
+            <li><a href="#" id="signOut" onclick="signOut()">Sign Out</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <section id="signIn" class="active-section">
+        <h2>Sign in to start your learning adventure!</h2>
+        <form id="signInForm" onsubmit="signIn(event)">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Sign In</button>
+        </form>
+    </section>
+
+    <section id="math" class="question-section">
+        <h2>Math Time!</h2>
+        <div id="mathQuestions" class="questions"></div>
+        <button onclick="checkAnswers('math')">Check Answers</button>
+    </section>
+
+    <section id="geography" class="question-section">
+        <h2>Geography Fun!</h2>
+        <div id="geographyQuestions" class="questions"></div>
+        <button onclick="checkAnswers('geography')">Check Answers</button>
+    </section>
+
+    <section id="science" class="question-section">
+        <h2>Science Adventures!</h2>
+        <div id="scienceQuestions" class="questions"></div>
+        <button onclick="checkAnswers('science')">Check Answers</button>
+    </section>
+
+    <div id="score">Score: 0</div>
+    <div id="rank">Rank: Easy</div>
+
+    <div id="multiplayer" onclick="startMultiplayer()">Multiplayer Mode</div>
+    <div class="banner" id="banner">Well Done!</div>
+
+    <div id="superheroSection" class="question-section">
+        <h2 class="superhero-header">Superheroes!</h2>
+        <p class="superhero">Choose your superhero:</p>
+        <div id="superheroes">
+            <button onclick="chooseSuperhero('Iron Man')">Iron Man</button>
+            <button onclick="chooseSuperhero('Spider-Man')">Spider-Man</button>
+            <button onclick="chooseSuperhero('Captain America')">Captain America</button>
+        </div>
+    </div>
+
+    <div id="multiplayerSection" class="question-section">
+        <div class="ai-player" id="aiPlayer">AI Player: Ready</div>
+        <div class="player" id="player">You: Ready</div>
+        <button onclick="startRace()">Start Race!</button>
+    </div>
+</main>
+
+<footer>
+    &copy; 2025 Learning Adventure. All rights reserved.
+</footer>
+
+<script>
+    let score = 0;
+    let playerRank = 'Easy';
+    let playerName = '';
+    let aiAnswer = '';
+    let playerAnswer = '';
+    let raceInProgress = false;
+
+    // Handle sign-in
+    function signIn(event) {
+        event.preventDefault();
+        playerName = document.getElementById('username').value;
+        document.getElementById('signIn').style.display = 'none'; // Hide sign-in after success
+        showSection('math'); // Show math section after successful sign-in
+    }
+
+    // Handle section display
+    function showSection(sectionId) {
+        let sections = document.querySelectorAll('.question-section, #signIn, #superheroSection');
+        sections.forEach(section => section.classList.remove('active-section'));
+        document.getElementById(sectionId).classList.add('active-section');
+        displayQuestions(sectionId);  // Show questions when section is activated
+    }
+
+    // Function to display questions
+    function displayQuestions(subject) {
+        let questionsContainer = document.getElementById(subject + 'Questions');
+        let questions = getQuestions(subject);
+        questionsContainer.innerHTML = '';
+
+        questions.forEach((question, index) => {
+            let questionElement = document.createElement('div');
+            questionElement.classList.add('question');
+            questionElement.innerHTML = `
+                <p>${index + 1}. ${question.question}</p>
+                <input type="text" id="answer-${subject}-${index}" placeholder="Your answer">
+            `;
+            questionsContainer.appendChild(questionElement);
+        });
+    }
+
+    // Get questions based on the subject
+    function getQuestions(subject) {
+        const questions = {
+            math: [
+                { question: 'What is 5 + 3?', answer: '8' },
+                { question: 'What is 12 * 4?', answer: '48' },
+                { question: 'What is 15 + 25?', answer: '40' },
+                { question: 'What is 100 / 4?', answer: '25' },
+                { question: 'What is 9 * 7?', answer: '63' },
+                { question: 'What is 16 / 4?', answer: '4' }
+            ],
+            geography: [
+                { question: 'What is the capital of France?', answer: 'paris' },
+                { question: 'Which continent is Australia in?', answer: 'oceania' },
+                { question: 'What is the longest river in the world?', answer: 'amazon' },
+                { question: 'Which country has the largest population?', answer: 'china' },
+                { question: 'Which ocean is the largest?', answer: 'pacific' },
+                { question: 'Which country is Mount Everest located in?', answer: 'nepal' }
+            ],
+            science: [
+                { question: 'What is H2O?', answer: 'water' },
+                { question: 'What planet is closest to the Sun?', answer: 'mercury' },
+                { question: 'What is the chemical symbol for gold?', answer: 'au' },
+                { question: 'What is the speed of light?', answer: '299792458' },
+                { question: 'What is the boiling point of water?', answer: '100' },
+                { question: 'What is the largest planet in our solar system?', answer: 'jupiter' }
+            ]
+        };
+
+        return questions[subject] || [];
+    }
+
+    // Function to check answers
+    function checkAnswers(subject) {
+        const questions = getQuestions(subject);
+        let correctAnswers = 0;
+
+        questions.forEach((question, index) => {
+            let userAnswer = document.getElementById(`answer-${subject}-${index}`).value.trim().toLowerCase();
+            if (userAnswer === question.answer.toLowerCase()) {
+                correctAnswers++;
+            }
+        });
+
+        score += correctAnswers;
+        updateRank();
+
+        document.getElementById('score').textContent = `Score: ${score}`;
+        showBanner();
+    }
+
+    // Update player rank based on score
+    function updateRank() {
+        if (score < 10) {
+            playerRank = 'Easy';
+        } else if (score < 20) {
+            playerRank = 'Medium';
+        } else {
+            playerRank = 'Hard';
+        }
+        document.getElementById('rank').textContent = `Rank: ${playerRank}`;
+    }
+
+    // Show banner
+    function showBanner() {
+        let banner = document.getElementById('banner');
+        banner.classList.add('active');
+        setTimeout(() => {
+            banner.classList.remove('active');
+        }, 3000);
+    }
+
+    // Multiplayer race function
+    function startMultiplayer() {
+        raceInProgress = true;
+        document.getElementById('multiplayerSection').classList.add('active-section');
+        document.getElementById('aiPlayer').textContent = "AI Player: Ready!";
+        document.getElementById('player').textContent = `${playerName}: Ready!`;
+    }
+
+    // Start the race
+    function startRace() {
+        if (raceInProgress) {
+            alert("Race Started! Answer as fast as you can!");
+            // Simulate AI player answering
+            aiAnswer = "10";  // Example static answer for AI
+            playerAnswer = document.getElementById('answer-math-0').value.trim().toLowerCase();
+
+            if (playerAnswer === aiAnswer) {
+                alert("You win! You answered faster!");
+            } else {
+                alert("AI wins this time! Better luck next time.");
+            }
+        }
+    }
+
+    // Superhero choice logic
+    function chooseSuperhero(superhero) {
+        alert(`You have chosen ${superhero}!`);
+    }
+
+</script>
+
+</body>
+</html>
