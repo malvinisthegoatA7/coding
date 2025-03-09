@@ -3,16 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guess the Number Game</title>
+    <title>Guess the Superhero Game</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ff6347;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        h3 {
+            color: #4682b4;
+        }
+
+        button {
+            background-color: #32cd32;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #228b22;
+        }
+
         .superhero-image {
             display: none;
+            max-width: 200px;
+            margin: 20px;
+        }
+
+        #score, #rank {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #6a5acd;
+        }
+
+        #playerGuess {
+            padding: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        #signInSection, #playerInfo, #aiPlayerSection {
+            margin: 20px;
+        }
+
+        .hint {
+            font-size: 18px;
+            margin: 10px;
+            color: #ff6347;
         }
     </style>
 </head>
 <body>
 
-<h1>Guess the Number Game</h1>
+<h1>Guess the Superhero Game</h1>
 
 <!-- Sign In Section -->
 <div id="signInSection">
@@ -21,24 +75,14 @@
     <button onclick="signIn()">Sign In</button>
 </div>
 
-<!-- Multiplayer Button -->
-<div id="multiplayerSection" style="display: none;">
-    <button onclick="startMultiplayer()">Start Multiplayer</button>
-</div>
-
 <!-- Player Info Section -->
 <div id="playerInfo" style="display: none;">
     <h2>Welcome, <span id="playerName"></span>!</h2>
     <p id="score">Score: 0</p>
     <p id="rank">Rank: Not Available</p>
-    <p id="player">Your Guess:</p>
-    <input type="number" id="playerGuess" min="1" max="100" placeholder="Guess a number between 1 and 100">
+    <p id="hint" class="hint">Hint: </p>
+    <input type="text" id="playerGuess" placeholder="Guess the superhero">
     <button onclick="submitGuess()">Submit Guess</button>
-</div>
-
-<!-- AI Player Section -->
-<div id="aiPlayerSection">
-    <p id="aiPlayer">AI's Guess: </p>
 </div>
 
 <!-- Superhero Section -->
@@ -46,20 +90,22 @@
 <button onclick="chooseSuperhero('Iron Man')">Iron Man</button>
 <button onclick="chooseSuperhero('Spider-Man')">Spider-Man</button>
 <button onclick="chooseSuperhero('Captain America')">Captain America</button>
+<button onclick="chooseSuperhero('Batman')">Batman</button>
 
 <!-- Superhero Images -->
 <div id="superheroImages">
     <img src="iron-man.jpg" class="superhero-image" id="Iron ManImage">
-    <img src="spider-man.jpg" class="superhero-image" id="Spider-ManImage">
-    <img src="captain-america.jpg" class="superhero-image" id="Captain AmericaImage">
+    <img src="https://clipart-library.com/images_k/spider-man-transparent-background/spider-man-transparent-background-14.jpg" class="superhero-image" id="Spider-ManImage">
+    <img src="https://freepngimg.com/save/37656-batman-transparent-background/729x1095" class="superhero-image" id="BatmanImage">
+    <img src="https://assets.stickpng.com/thumbs/580b57fbd9996e24bc43c026.png" class="superhero-image" id="Captain AmericaImage">
 </div>
 
 <script>
     let playerName = '';
     let score = 0;
     let playerRank = 'Not Available';
-    let aiAnswer = Math.floor(Math.random() * 100) + 1;  // AI guesses a random number between 1-100
-    let aiGuess = 0;
+    let superheroAnswer = '';
+    let superheroGuess = '';
     let raceInProgress = false;
 
     // Sign In Function
@@ -72,95 +118,48 @@
         document.getElementById("playerName").textContent = playerName;
         document.getElementById("signInSection").style.display = "none";
         document.getElementById("playerInfo").style.display = "block";
-        document.getElementById("multiplayerSection").style.display = "block";
     }
 
-    // Multiplayer Function (currently alerts user)
-    function startMultiplayer() {
-        alert("Multiplayer is coming soon!");  // Show an alert instead of just an empty message
-    }
-
-    // Submit Guess Function
-    function submitGuess() {
-        const playerGuess = parseInt(document.getElementById("playerGuess").value);
-        if (isNaN(playerGuess) || playerGuess < 1 || playerGuess > 100) {
-            alert("Please enter a valid number between 1 and 100.");
-            return;
-        }
-
-        if (raceInProgress) {
-            alert("The race is already in progress. Wait for the next round.");
-            return;
-        }
-
-        aiGuess = Math.floor(Math.random() * 100) + 1;  // AI makes a new guess for each round
-        document.getElementById("playerGuess").style.display = "none";  // Hide input field when submitted
-        
-        raceInProgress = true;  // Start the race
-
-        // Display AI guess (you can improve this by showing the AI's attempt dynamically)
-        document.getElementById("aiPlayer").textContent = `AI's Guess: ${aiGuess}`;
-
-        // Handle who won the race
-        setTimeout(() => {
-            if (playerGuess === aiGuess) {
-                document.getElementById("player").textContent = "You guessed it right! You win!";
-                document.getElementById("aiPlayer").textContent = "AI lost this time!";
-                score += 10; // Reward points for correct guess
-            } else {
-                document.getElementById("player").textContent = "You guessed wrong. Better luck next time!";
-                document.getElementById("aiPlayer").textContent = "AI won this round!";
-            }
-
-            document.getElementById("score").textContent = `Score: ${score}`;
-            document.getElementById("rank").textContent = `Rank: ${playerRank}`;
-            raceInProgress = false;  // End the race
-            document.getElementById("playerGuess").style.display = "block";  // Show input again
-        }, 2000);  // Show results after 2 seconds
-    }
-
-    // Handle superhero selection and images
+    // Function to choose superhero and show hints
     function chooseSuperhero(superhero) {
-        const superheroImages = {
-            'Iron Man': 'iron-man.jpg',
-            'Spider-Man': 'spider-man.jpg',
-            'Captain America': 'captain-america.jpg'
+        const superheroHints = {
+            'Iron Man': 'A genius billionaire inventor who wears a suit of armor to fight evil.',
+            'Spider-Man': 'A young man bitten by a radioactive spider, now able to climb walls.',
+            'Captain America': 'A super-soldier from the 1940s who fights for justice and freedom.',
+            'Batman': 'A billionaire who fights crime in Gotham City using his intellect and gadgets.'
         };
 
+        superheroAnswer = superhero;
+        // Display the hint for the selected superhero
+        document.getElementById("hint").textContent = `Hint: ${superheroHints[superhero]}`;
+        
         // Hide all images first
         document.querySelectorAll('.superhero-image').forEach(img => img.style.display = 'none');
-
+        
         // Show selected superhero image
         document.getElementById(superhero + 'Image').style.display = 'block';
     }
 
-    // Handle question checking
-    function checkAnswers(subject) {
-        const questions = getQuestions(subject);
-        let correctAnswers = 0;
+    // Submit Guess Function
+    function submitGuess() {
+        superheroGuess = document.getElementById("playerGuess").value.trim();
 
-        questions.forEach((question, index) => {
-            const userAnswer = document.getElementById(`answer-${subject}-${index}`).value.trim().toLowerCase();
-            if (userAnswer === question.answer.toLowerCase()) {
-                correctAnswers++;
-            }
-        });
-
-        // Update score and rank based on the number of correct answers
-        score += correctAnswers * 5; // Reward 5 points per correct answer
-        if (correctAnswers >= 5) {
-            playerRank = 'Medium';
-        } else if (correctAnswers >= 3) {
-            playerRank = 'Easy';
+        // Check if guess is correct
+        if (superheroGuess.toLowerCase() === superheroAnswer.toLowerCase()) {
+            alert("Correct! You guessed the superhero right!");
+            score += 10; // Add points for correct guess
         } else {
-            playerRank = 'Hard';
+            alert("Wrong guess! Try again.");
         }
 
         document.getElementById("score").textContent = `Score: ${score}`;
-        document.getElementById("rank").textContent = `Rank: ${playerRank}`;
-    }
 
+        // Reset the hint and input
+        document.getElementById("hint").textContent = "Hint: ";
+        document.getElementById("playerGuess").value = '';
+    }
 </script>
 
 </body>
 </html>
+
